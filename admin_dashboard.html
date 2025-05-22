@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – Chefneed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; margin: 0; background: #fdf6ec; color: #333; }
+    header { background: #ffe0b2; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+    header h2 { color: #d84315; margin: 0; }
+    a.logout { background: #e65100; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-weight: 500; }
+    main { padding: 30px; }
+    section { margin-bottom: 40px; }
+    h3 { color: #e65100; margin-bottom: 10px; }
+    form { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    input, select { padding: 10px; width: 100%; margin: 10px 0; border-radius: 8px; border: 1px solid #ffe0b2; }
+    button { padding: 10px 16px; background: #e65100; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #fff3e0; }
+    .actions button { margin-right: 8px; background: #ffa726; }
+    .actions form { display: inline; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Admin – Chefneed</h2>
+    <a class="logout" href="/logout">Logout</a>
+  </header>
+  <main>
+    <section>
+      <h3>Add or Edit User</h3>
+      <form action="/admin/users" method="POST">
+        <input type="text" name="mobile" placeholder="Mobile Number" required>
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="number" name="credits" placeholder="Credits" required>
+        <button type="submit">Save User</button>
+      </form>
+      <table>
+        <tr><th>Mobile</th><th>Name</th><th>Credits</th><th>Actions</th></tr>
+        {% for mobile, u in users.items() %}
+        <tr>
+          <td>{{ mobile }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.credits }}</td>
+          <td class="actions">
+            <form action="/admin/delete_user/{{ mobile }}" method="POST"><button type="submit">Delete</button></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </section>
+
+    <section>
+      <h3>Add or Edit Chef</h3>
+      <form action="/admin/chefs" method="POST">
+        <input type="text" name="id" placeholder="Chef ID (unique)" required>
+        <input type="text" name="name" placeholder="Chef Name" required>
+        <input type="text" name="cuisine" placeholder="Cuisine" required>
+        <input type="text" name="city" placeholder="City" required>
+        <input type="text" name="language" placeholder="Language" required>
+        <input type="text" name="experience" placeholder="Experience" required>
+        <input type="text" name="desc" placeholder="Description" required>
+        <input type="text" name="wa" placeholder="WhatsApp Number (e.g., 919000000000)" required>
+        <button type="submit">Save Chef</button>
+      </form>
+      <table>
+        <tr><th>ID</th><th>Name</th><th>Cuisine</th><th>City</th><th>Actions</th></tr>
+        {% for cid, c in chefs.items() %}
+        <tr>
+          <td>{{ cid }}</td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.cuisine }}</td>
+          <td>{{ c.city }}</td>
+          <td class="actions">
+            <form action="/admin/delete_chef/{{ cid }}" method="POST"><button type="submit">Delete</button></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </section>
+  </main>
+</body>
+</html>
