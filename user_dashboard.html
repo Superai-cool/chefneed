@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard – Chefneed.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fffefc;
+      margin: 0;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(to right, #ffe0b2, #ffcc80);
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h2 {
+      margin: 0;
+      color: #d84315;
+    }
+    .info {
+      text-align: right;
+    }
+    .info span {
+      font-weight: bold;
+      color: #5d4037;
+      display: block;
+    }
+    .logout {
+      background: #e65100;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 8px;
+      display: inline-block;
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      position: relative;
+    }
+    .card h3 { margin-top: 0; color: #e65100; }
+    .desc { font-size: 13px; color: #555; margin-top: 6px; }
+    .contact {
+      margin-top: 12px;
+      display: inline-block;
+      background: #25D366;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .lock-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .lock-overlay button {
+      background: #e65100;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .unlocked .lock-overlay { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Chefneed</h2>
+    <div class="info">
+      <span>User: {{ user.name }}</span>
+      <span>Credits Left: {{ user.credits }}</span>
+      <a class="logout" href="/logout">Logout</a>
+    </div>
+  </header>
+
+  <div class="card-container">
+    {% for chef in chefs %}
+    <div class="card {% if chef.unlocked %}unlocked{% endif %}">
+      <h3>{{ chef.name }}</h3>
+      <p>Cuisine: {{ chef.cuisine }}</p>
+      <p>City: {{ chef.city }}</p>
+      <p>Language: {{ chef.language }}</p>
+      <p>Experience: {{ chef.experience }}</p>
+      <p class="desc">{{ chef.desc }}</p>
+      <a class="contact" href="https://wa.me/{{ chef.wa }}" target="_blank">Contact via WhatsApp</a>
+      {% if not chef.unlocked %}
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <form action="/unlock/{{ chef.id }}" method="POST">
+          <button type="submit">Unlock</button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
