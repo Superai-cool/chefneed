@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matrimony Profiles</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff0f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px 20px;
+      background: linear-gradient(135deg, #ffe4e6, #fecdd3);
+    }
+    header h1 {
+      font-size: 40px;
+      color: #b91c1c;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 18px;
+      color: #6b7280;
+    }
+    .filters {
+      text-align: center;
+      margin: 20px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .filters select {
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      background-color: #fff5f7;
+      color: #b91c1c;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 40px 20px;
+    }
+    .card {
+      background: #fff;
+      border: 2px solid #fca5a5;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      width: 280px;
+      padding: 20px;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 20px;
+      color: #b91c1c;
+    }
+    .card .city, .card .age, .card .language, .card .current-city, .card .company {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .card .city::before {
+      content: "Hometown: ";
+      font-weight: 500;
+      color: #374151;
+    }
+    .card .language::before {
+      content: "Primary Language: ";
+      font-weight: 500;
+      color: #374151;
+    }
+    .card .desc {
+      font-size: 14px;
+      margin-top: 10px;
+      color: #374151;
+    }
+    .linkedin {
+      margin-top: 12px;
+      display: inline-block;
+      color: #0e76a8;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .linkedin i {
+      margin-right: 6px;
+    }
+    .lock-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(3px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 14px;
+    }
+    .lock-overlay p {
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .unlock-btn {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .unlock-btn:hover {
+      background: #dc2626;
+    }
+    .unlocked .lock-overlay {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <h1>Find Your Perfect Match</h1>
+  <p>Exclusive, verified LinkedIn profiles for serious matrimonial connections</p>
+  <div style="position: absolute; top: 20px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;">
+    <div style="font-size: 14px; color: #b91c1c; font-weight: bold;">Credits Left: <span id='creditCount'>20</span></div>
+    <a href="#" onclick="logout()" style="background: #b91c1c; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 500;">Logout</a>
+    <a href="https://example.com/recharge" style="background: #10b981; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 500;">Recharge</a>
+  </div>
+</header>
+<div class="filters">
+  <select id="cityFilter">
+    <option value="">All Hometowns</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Mumbai">Mumbai</option>
+    <option value="Bangalore">Bangalore</option>
+    <option value="Hyderabad">Hyderabad</option>
+    <option value="Chennai">Chennai</option>
+  </select>
+  <select id="ageFilter">
+    <option value="">All Ages</option>
+    <option value="25-28">25–28</option>
+    <option value="29-31">29–31</option>
+    <option value="32-35">32–35</option>
+  </select>
+  <select id="languageFilter">
+    <option value="">All Languages</option>
+    <option value="Hindi">Hindi</option>
+    <option value="Marathi">Marathi</option>
+    <option value="Tamil">Tamil</option>
+    <option value="Telugu">Telugu</option>
+    <option value="Gujarati">Gujarati</option>
+    <option value="Bengali">Bengali</option>
+  </select>
+  <select id="currentCityFilter">
+    <option value="">All Current Cities</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Mumbai">Mumbai</option>
+    <option value="Bangalore">Bangalore</option>
+    <option value="Hyderabad">Hyderabad</option>
+    <option value="Chennai">Chennai</option>
+    <option value="Pune">Pune</option>
+  </select>
+  <select id="companyFilter">
+    <option value="">All Companies</option>
+    <option value="Google">Google</option>
+    <option value="Microsoft">Microsoft</option>
+    <option value="Infosys">Infosys</option>
+    <option value="TCS">TCS</option>
+    <option value="Amazon">Amazon</option>
+    <option value="Capgemini">Capgemini</option>
+    <option value="HCL">HCL</option>
+  </select>
+</div>
+
+
+
+  <div class="card-container" id="cardContainer">
+    <!-- Cards go here -->
+    <!-- Example 25 updated cards inserted below -->
+    <div class="card">
+      <h3>Priya Sharma</h3>
+      <p class="city">Delhi</p>
+      <p class="age">Age: 28</p>
+      <p class="language">Hindi</p>
+      <p class="desc">Loves nature, art, and finding joy in small things.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/priyasharma" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card unlocked">
+      <h3>Rahul Mehta</h3>
+      <p class="city">Mumbai</p>
+      <p class="age">Age: 30</p>
+      <p class="language">Marathi</p>
+      <p class="desc">Tech enthusiast and compassionate team player.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/rahulmehta" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+    </div>
+    <div class="card">
+      <h3>Ananya Iyer</h3>
+      <p class="city">Chennai</p>
+      <p class="age">Age: 27</p>
+      <p class="language">Tamil</p>
+      <p class="desc">Creative soul who loves books and cultural traditions.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/ananyaiyer" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Karan Kapoor</h3>
+      <p class="city">Bangalore</p>
+      <p class="age">Age: 32</p>
+      <p class="language">Punjabi</p>
+      <p class="desc">Driven and grounded individual with a kind heart.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/karankapoor" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card unlocked">
+      <h3>Sneha Reddy</h3>
+      <p class="city">Hyderabad</p>
+      <p class="age">Age: 29</p>
+      <p class="language">Telugu</p>
+      <p class="desc">Ambitious and spiritual, values family and career.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/snehareddy" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+    </div>
+    <div class="card">
+      <h3>Rohit Verma</h3>
+      <p class="city">Delhi</p>
+      <p class="age">Age: 29</p>
+      <p class="language">Hindi</p>
+      <p class="current-city">Bangalore</p>
+      <p class="company">Google</p>
+      <p class="desc">Explorer of ideas, loyal to ambitions.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/rohitverma" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card unlocked">
+      <h3>Divya Nair</h3>
+      <p class="city">Chennai</p>
+      <p class="age">Age: 27</p>
+      <p class="language">Tamil</p>
+      <p class="current-city">Hyderabad</p>
+      <p class="company">Infosys</p>
+      <p class="desc">Curious, calm, and driven by empathy.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/divyanair" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+    </div>
+    <div class="card">
+      <h3>Aditi Sen</h3>
+      <p class="city">Kolkata</p>
+      <p class="age">Age: 26</p>
+      <p class="language">Bengali</p>
+      <p class="current-city">Mumbai</p>
+      <p class="company">TCS</p>
+      <p class="desc">Artist at heart, engineer by profession.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/aditisen" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Vikram Joshi</h3>
+      <p class="city">Ahmedabad</p>
+      <p class="age">Age: 31</p>
+      <p class="language">Gujarati</p>
+      <p class="current-city">Delhi</p>
+      <p class="company">HCL</p>
+      <p class="desc">Loyal, thoughtful, and loves challenges.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/vikramjoshi" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card unlocked">
+      <h3>Megha Rao</h3>
+      <p class="city">Hyderabad</p>
+      <p class="age">Age: 30</p>
+      <p class="language">Telugu</p>
+      <p class="current-city">Hyderabad</p>
+      <p class="company">Microsoft</p>
+      <p class="desc">Balanced and cheerful outlook on life.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/megharao" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+    </div>
+    <div class="card">
+      <h3>Neeraj Kumar</h3>
+      <p class="city">Patna</p>
+      <p class="age">Age: 33</p>
+      <p class="language">Hindi</p>
+      <p class="current-city">Pune</p>
+      <p class="company">Capgemini</p>
+      <p class="desc">Calm, confident, and ready to commit.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/neerajkumar" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Pooja Deshmukh</h3>
+      <p class="city">Nagpur</p>
+      <p class="age">Age: 28</p>
+      <p class="language">Marathi</p>
+      <p class="current-city">Pune</p>
+      <p class="company">Amazon</p>
+      <p class="desc">Independent, passionate, and thoughtful.</p>
+      <a class="linkedin" href="https://www.linkedin.com/in/poojadesh" target="_blank">
+        <i class="fab fa-linkedin"></i>View Profile</a>
+      <div class="lock-overlay">
+        <p>Unlock profile with 1 credit</p>
+        <button class="unlock-btn" onclick="unlock(this)">Unlock</button>
+      </div>
+    </div>
+    <!-- More profiles can be generated similarly -->
+  </div>
+
+  <footer style="background:#ffe4e6; padding: 20px; text-align: center; font-size: 14px; color: #6b7280;">
+  <p>Need help? Contact us at <a href="mailto:matrimony@example.com">matrimony@example.com</a></p>
+  <p>&copy; 2025 Matrimony Profiles. All rights reserved.</p>
+</footer>
+
+<section id="myProfile" style="background: #fdf2f8; padding: 40px 20px;">
+  <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+    <h2 style="color: #b91c1c; margin-bottom: 20px; text-align: center;">List Your Profile</h2>
+    <form style="display: flex; flex-direction: column; gap: 15px;">
+      <input type="text" placeholder="Full Name" style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;" required>
+      <input type="text" placeholder="Hometown City" style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;" required>
+      <input type="number" placeholder="Age" style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;" required>
+      <select style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;">
+        <option selected disabled>Primary Language</option>
+        <option>Hindi</option>
+        <option>Marathi</option>
+        <option>Gujarati</option>
+        <option>Tamil</option>
+        <option>Telugu</option>
+        <option>Bengali</option>
+        <option>Kannada</option>
+      </select>
+      <input type="text" placeholder="One-liner About You" style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;" required>
+      <input type="url" placeholder="LinkedIn Profile Link" style="padding: 10px; border-radius: 6px; border: 1px solid #fca5a5;" required>
+      <button type="submit" style="background: #b91c1c; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px;">Submit Request</button>
+    </form>
+  </div>
+</section>
+
+<script>
+    // Extend filtering logic to current city and company
+    function unlock(button) {
+  const card = button.closest('.card');
+  const credits = parseInt(document.getElementById('creditCount').textContent);
+  if (credits > 0) {
+    document.getElementById('creditCount').textContent = credits - 1;
+    card.classList.add('unlocked');
+  } else {
+    alert('You do not have enough credits. Please recharge to continue.');
+  }
+}
+
+    // Filtering Logic
+    document.querySelectorAll('.filters select').forEach(select => {
+      select.addEventListener('change', () => {
+        const city = document.getElementById('cityFilter').value;
+        const age = document.getElementById('ageFilter').value;
+        const language = document.getElementById('languageFilter').value;
+
+        document.querySelectorAll('.card-container .card').forEach(card => {
+          const cardCity = card.querySelector('.city')?.textContent.trim();
+          const cardLang = card.querySelector('.language')?.textContent.trim();
+          const cardAge = parseInt(card.querySelector('.age')?.textContent.replace('Age: ', ''));
+
+          const ageMatch = !age || (age === '25-28' && cardAge >= 25 && cardAge <= 28) ||
+                                    (age === '29-31' && cardAge >= 29 && cardAge <= 31) ||
+                                    (age === '32-35' && cardAge >= 32 && cardAge <= 35);
+          const cityMatch = !city || cardCity === city;
+          const langMatch = !language || cardLang === language;
+
+          const currentCity = document.getElementById('currentCityFilter')?.value;
+          const cardCurrentCity = card.querySelector('.current-city')?.textContent.trim();
+          const currentCityMatch = !currentCity || cardCurrentCity === currentCity;
+          card.style.display = (ageMatch && cityMatch && langMatch && currentCityMatch) ? 'block' : 'none';
+        });
+      });
+    });
+  function logout() {
+  alert('You have been logged out.');
+  location.reload();
+}
+</script>
+</body>
+</html>
